@@ -1,25 +1,25 @@
-import { UserService } from './user.service';
 import {
-  Body,
   Controller,
-  Delete,
-  Get,
-  Patch,
   Post,
+  Body,
+  Get,
   Put,
-  UseGuards,
+  Patch,
+  Delete,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
-import { get } from 'http';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { UpdatePutUserDTO } from './dto/update-put.dto';
-import { UpdatePatchUserDTO } from './dto/update-patch.dto';
-import { LogInterceptor } from 'src/interceptors/log.interceptor';
 import { ParamId } from 'src/decorators/param-id.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
-import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { RoleGuard } from 'src/guards/role.guard';
+import { LogInterceptor } from 'src/interceptors/log.interceptor';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdatePutUserDTO } from './dto/update-put.dto';
+import { UpdatePatchUserDTO } from './dto/update-patch.dto';
+import { UserService } from './user.service';
+
 @Roles(Role.Admin)
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
@@ -39,16 +39,17 @@ export class UserController {
 
   @Get(':id')
   async show(@ParamId() id: number) {
+    console.log({ id });
     return this.userService.show(id);
   }
 
   @Put(':id')
-  async update(@Body() data: UpdatePutUserDTO, @ParamId() id) {
+  async update(@Body() data: UpdatePutUserDTO, @ParamId() id: number) {
     return this.userService.update(id, data);
   }
 
   @Patch(':id')
-  async updatePartial(@Body() data: UpdatePatchUserDTO, @ParamId() id) {
+  async updatePartial(@Body() data: UpdatePatchUserDTO, @ParamId() id: number) {
     return this.userService.updatePartial(id, data);
   }
 
